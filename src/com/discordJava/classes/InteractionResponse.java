@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class InteractionResponse extends DiscordSuperClass {
+public class InteractionResponse {
     public Integer type;
     public InteractionApplicationCommandCallbackData data;
     public Client client;

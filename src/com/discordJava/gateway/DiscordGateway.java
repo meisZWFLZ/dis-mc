@@ -92,7 +92,6 @@ public class DiscordGateway extends ClientWebsocket implements Runnable {
 
     public Object listener(Frame frame) {
         HashMap payload = new Gson().fromJson(frame.payload, HashMap.class);
-        System.out.println(frame.payload);
 
         ArrayList<Function<HashMap, Object>> listeners = this.eventList.get(((Double) payload.get("op")).intValue());
         if (listeners != null && !listeners.isEmpty())
@@ -120,9 +119,6 @@ public class DiscordGateway extends ClientWebsocket implements Runnable {
     //op: 0
     private Object dispatchListener(HashMap payload) {
         this.sequence = ((Double) payload.get("s")).intValue();
-        this.session_id = (String) ((LinkedTreeMap) payload.get("d")).get("session_id");
-
-        System.out.println(((String) payload.get("t")).toUpperCase());
 
         ArrayList<Function<HashMap, Object>> listeners = this.eventList.get(((String) payload.get("t")).toUpperCase());
         if (listeners != null && !listeners.isEmpty())

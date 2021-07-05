@@ -1,4 +1,4 @@
 package com.discordJava.classes;
 
-public class Attachment extends DiscordSuperClass {
+public class Attachment {
 }

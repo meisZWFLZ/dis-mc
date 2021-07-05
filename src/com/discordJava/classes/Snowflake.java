@@ -2,7 +2,7 @@ package com.discordJava.classes;
 
 import java.sql.Timestamp;
 
-public class Snowflake extends DiscordSuperClass {
+public class Snowflake {
     public long time;
     public byte internalWorkerID;
     public byte internalProcessID;

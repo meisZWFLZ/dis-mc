@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class Embed extends DiscordSuperClass {
+public class Embed {
     public String title;
     public String description;
 

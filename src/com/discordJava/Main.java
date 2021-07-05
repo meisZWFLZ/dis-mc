@@ -1,4 +1,7 @@
 package com.discordJava;
+//
+//import com.discordJava.classes.Client;
+//
 
 import com.discordJava.classes.Client;
 

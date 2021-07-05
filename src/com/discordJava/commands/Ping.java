@@ -5,16 +5,16 @@ import com.discordJava.classes.Message;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-public class Ping implements Command {
+public class Ping extends Command {
     static String[] aliases = new String[]{
             "pong"
     };
-    public static String name = "ping";
-    public static String description = "pong";
-    public static String usage = "!ping";
-    public static String examples = "!ping";
-    public static Boolean dmSupport = true;
-    public static Integer[] args = new Integer[]{1};
+    static String name = "ping";
+    static String description = "pong";
+    static String usage = "!ping";
+    static String examples = "!ping";
+    static Boolean dmSupport = true;
+    static Integer[] args = new Integer[]{1};
 
     public void execute(Input input) {
         try {
@@ -24,11 +24,15 @@ public class Ping implements Command {
         }
     }
 
-    public String[] getAliases() {return aliases;}
-    public String getName() {return name;}
-    public String getDescription() {return description;}
-    public String getUsage() {return usage;}
-    public String getExamples() {return examples;}
-    public Boolean getDmSupport() {return dmSupport;}
-    public Integer[] getArgs() {return args;}
+    public Ping() {
+        super(aliases, name, description, usage, examples, dmSupport, args);
+    }
+
+//    public String[] getAliases() {return aliases;}
+//    public String getName() {return name;}
+//    public String getDescription() {return description;}
+//    public String getUsage() {return usage;}
+//    public String getExamples() {return examples;}
+//    public Boolean getDmSupport() {return dmSupport;}
+//    public Integer[] getArgs() {return args;}
 }

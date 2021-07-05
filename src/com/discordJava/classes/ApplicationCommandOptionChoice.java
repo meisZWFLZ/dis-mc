@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class ApplicationCommandOptionChoice extends DiscordSuperClass {
+public class ApplicationCommandOptionChoice {
     String name;
     Object value;
 }

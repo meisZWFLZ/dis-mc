@@ -2,7 +2,10 @@ package com.discordJava.classes;
 
 import com.discordJava.events.*;
 import com.discordJava.gateway.DiscordGateway;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
 import java.io.IOException;
@@ -11,18 +14,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Function;
 
-public class Client extends DiscordSuperClass {
+public class Client {
     public String token;
-    protected HashMap<String, EventHandler<?>> eventHandlers;
-    public User user = null;
-    public Guild[] guilds = null;
-    public Application application = null;
-    public String session_id;
-    public String[] intents = new String[]{
+    private HashMap<String, EventHandler<?>> eventHandlers;
+    private User user = null;
+    private Guild[] guilds = null;
+    private Application application = null;
+    private String session_id;
+    private String[] intents = new String[]{
             "GUILD_MESSAGES", "DIRECT_MESSAGES"
     };
     private DiscordGateway gateway;
     public Byte version = 8;
+    public static final Gson GSON = new GsonBuilder().setExclusionStrategies(new GsonClientExclusionStrategy()).create();
+    private final Client client;
 
     public Client(String[] intents) throws Exception {
         this.intents = intents;
@@ -58,28 +63,22 @@ public class Client extends DiscordSuperClass {
     }
 
     public Object dispatchListener(HashMap<?, ?> payload) {
-        System.out.println("Client dispatch listener called!");
         EventHandler<?> handler = eventHandlers.get((String) payload.get("t"));
         if (handler == null) return null;
-        System.out.println("Handing off to handler!");
         handler.handler(payload);
 
         return null;
     }
 
     private Object readyListener(HashMap payload) {
-        System.out.println("Recieved ready event!");
-        String payloadStr = new Gson().toJson(payload, HashMap.class);
-        System.out.println("Payload string: " + payloadStr);
-        Ready ready = new Gson().fromJson(payloadStr, Ready.class);
+        String payloadStr = GSON.toJson(payload, HashMap.class);
+        Ready ready = GSON.fromJson(payloadStr, Ready.class);
 
-        System.out.println("Defining client variables");
         this.user = ready.user;
         this.guilds = ready.guilds;
         this.application = ready.application;
         this.session_id = ready.session_id;
 
-        System.out.println("Ready event handled!");
         return null;
     }
 
@@ -92,9 +91,7 @@ public class Client extends DiscordSuperClass {
             intents = intentList.toArray(new String[]{});
         } else intents = this.intents;
         for (IntentEvent intent : Arrays.stream(IntentEvent.values()).filter(x -> Arrays.stream(intents).toList().contains(x.name())).toList().toArray(new IntentEvent[]{})) {
-//            System.out.println(intent.name());
             for (GatewayEvent event : intent.getClasses()) {
-//                System.out.println(event.getEventName());
                 this.eventHandlers.put(event.getEventName(),
                         switch (event.getEventName()) {
                             case "STAGE_INSTANCE_DELETE" -> new EventHandler<StageInstanceDelete>(this, StageInstanceDelete.class);
@@ -219,6 +216,17 @@ public class Client extends DiscordSuperClass {
 
     public HashMap<String, EventHandler<?>> getHandlers() {
         return this.eventHandlers;
+    }
+
+    private static class GsonClientExclusionStrategy implements ExclusionStrategy{
+        @Override
+        public boolean shouldSkipField(FieldAttributes f) {
+            return f.getDeclaringClass().equals(Client.class);
+        }
+        @Override
+        public boolean shouldSkipClass(Class<?> clazz) {
+            return clazz.equals(Client.class);
+        }
     }
 
     public enum IntentEvent {
@@ -346,8 +354,7 @@ public class Client extends DiscordSuperClass {
         }
 
         public Object handler(HashMap payload) {
-            String a = new Gson().toJson(payload.get("d"), LinkedTreeMap.class);
-            E event = (E) new Gson().fromJson(a, this.clazz);
+            E event = Client.GSON.fromJson(Client.GSON.toJson(payload.get("d"), LinkedTreeMap.class), this.clazz);
 
             final EventHandler.Input<E> input = new EventHandler.Input<E>(event, this.client);
 

@@ -4,8 +4,6 @@ import com.discordJava.classes.Client;
 import com.discordJava.classes.Interaction;
 import com.discordJava.classes.Message;
 import com.discordJava.commands.Command;
-import com.discordJava.commands.Help;
-import com.discordJava.commands.Ping;
 import com.discordJava.events.InteractionCreate;
 import com.discordJava.events.MessageCreate;
 import com.discordJava.slashCommands.SlashCommand;
@@ -24,11 +22,6 @@ public class DiscordBot extends Client {
 
     private final CommandHandler commandHandler;
     private final SlashHandler slashHandler;
-
-    private static final Command[] commandList = new Command[]{
-            new Help(),
-            new Ping()
-    };
 
     private static final SlashCommand[] slashList = new SlashCommand[]{
             new Bleq()
@@ -119,7 +112,7 @@ public class DiscordBot extends Client {
 
             Command cmd = null;
             try {
-                List<Command> cmdList = Arrays.stream(commandList).filter(x -> x.getName().equals(command) || (Arrays.stream(x.getAliases()).toList().contains(command))).toList();
+                List<Command> cmdList = Arrays.stream(Command.LIST).filter(x -> x.name.equals(command) || (Arrays.stream(x.aliases).toList().contains(command))).toList();
                 if (cmdList.size() > 0) cmd = cmdList.get(0);
             } catch (Exception e) {
                 System.out.println(e);
@@ -127,7 +120,7 @@ public class DiscordBot extends Client {
             }
 
             if (cmd == null) return;
-            Integer[] cArgs = cmd.getArgs();
+            Integer[] cArgs = cmd.args;
             System.out.println(cArgs[0] != args.length);
 
             if ((cArgs.length == 1) ? (cArgs[0] == args.length) : ((args.length >= cArgs[0]) && (args.length <= cArgs[1])))

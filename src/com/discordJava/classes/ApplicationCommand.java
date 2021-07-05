@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class ApplicationCommand extends DiscordSuperClass {
+public class ApplicationCommand {
     String id;
     String application_id;
     String guild_id;
