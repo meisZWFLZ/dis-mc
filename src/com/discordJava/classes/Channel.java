@@ -14,7 +14,7 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Channel extends DiscordSuperClass {
+public class Channel {
     public Snowflake id;
     public Integer type;
     public Snowflake guild_id;

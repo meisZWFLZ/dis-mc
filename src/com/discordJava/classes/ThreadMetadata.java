@@ -1,4 +1,4 @@
 package com.discordJava.classes;
 
-public class ThreadMetadata extends DiscordSuperClass {
+public class ThreadMetadata {
 }

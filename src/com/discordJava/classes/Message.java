@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.HashMap;
 
-public class Message extends DiscordSuperClass {
+public class Message {
     public String id;
     public String channel_id;
     public User author;
@@ -44,7 +44,10 @@ public class Message extends DiscordSuperClass {
     public MessageComponent[] components;
     public Client client;
 
-    public Message() {};
+    public Message() {
+    }
+
+    ;
 
     public Message(Client client, Long channelId, Long messageId) throws IOException, InterruptedException, URISyntaxException {
         HttpRequest req = HttpRequest.newBuilder()
@@ -119,16 +122,21 @@ public class Message extends DiscordSuperClass {
     }
 
     public Message send() throws IOException, InterruptedException, URISyntaxException {
-        String form = new Gson().toJson(this, Message.class);
+        try {
+            String form = Client.GSON.toJson(this, Message.class);
 
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest req = HttpRequest.newBuilder()
-                .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.channel_id + "/messages"))
-                .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
-                .timeout(Duration.ofSeconds(10))
-                .POST(HttpRequest.BodyPublishers.ofString(form))
-                .build();
-        return new Gson().fromJson(client.send(req, HttpResponse.BodyHandlers.ofString()).body(), Message.class);
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest req = HttpRequest.newBuilder()
+                    .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.channel_id + "/messages"))
+                    .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
+                    .timeout(Duration.ofSeconds(10))
+                    .POST(HttpRequest.BodyPublishers.ofString(form))
+                    .build();
+            return Client.GSON.fromJson(client.send(req, HttpResponse.BodyHandlers.ofString()).body(), Message.class);
+        } catch(Exception e) {
+            System.out.println("Message failed to send, error: " + e);
+            return null;
+        }
     }
 
     public Message reply(Message message) throws URISyntaxException, IOException, InterruptedException {

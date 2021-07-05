@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class ApplicationCommandInteractionData extends DiscordSuperClass {
+public class ApplicationCommandInteractionData {
     public String id;
     public String name;
     public ApplicationCommandInteractionDataResolved resolved;

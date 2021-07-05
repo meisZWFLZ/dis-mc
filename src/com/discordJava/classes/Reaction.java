@@ -1,4 +1,4 @@
 package com.discordJava.classes;
 
-public class Reaction extends DiscordSuperClass {
+public class Reaction {
 }

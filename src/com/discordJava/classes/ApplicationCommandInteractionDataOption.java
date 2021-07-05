@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class ApplicationCommandInteractionDataOption extends DiscordSuperClass {
+public class ApplicationCommandInteractionDataOption {
     public String name;
     public Integer type;
     public Object value;

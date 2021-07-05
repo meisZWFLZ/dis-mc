@@ -1,6 +1,6 @@
 package com.discordJava.classes;
 
-public class InteractionApplicationCommandCallbackData extends DiscordSuperClass {
+public class InteractionApplicationCommandCallbackData {
     public Boolean tts;
     public String content;
     public Embed[] embeds;

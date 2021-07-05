@@ -1,4 +1,4 @@
 package com.discordJava.classes;
 
-public class ThreadMember extends DiscordSuperClass {
+public class ThreadMember {
 }

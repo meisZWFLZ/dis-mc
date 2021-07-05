@@ -11,4 +11,6 @@ public class Ready implements GatewayEvent {
     public String session_id;
     public Integer[] shard;
     public Application application;
+
+    public Ready() {}
 }
