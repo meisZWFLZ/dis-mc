@@ -17,9 +17,9 @@ import java.util.function.Function;
 public class Client {
     public String token;
     private HashMap<String, EventHandler<?>> eventHandlers;
-    private User user = null;
-    private Guild[] guilds = null;
-    private Application application = null;
+    public User user;
+    public Guild[] guilds;
+    public Application application;
     private String session_id;
     private String[] intents = new String[]{
             "GUILD_MESSAGES", "DIRECT_MESSAGES"
@@ -27,7 +27,7 @@ public class Client {
     private DiscordGateway gateway;
     public Byte version = 8;
     public static final Gson GSON = new GsonBuilder().setExclusionStrategies(new GsonClientExclusionStrategy()).create();
-    private final Client client;
+    public Client client;
 
     public Client(String[] intents) throws Exception {
         this.intents = intents;
@@ -78,6 +78,7 @@ public class Client {
         this.guilds = ready.guilds;
         this.application = ready.application;
         this.session_id = ready.session_id;
+        this.client = this;
 
         return null;
     }
@@ -150,13 +151,52 @@ public class Client {
         }
     }
 
+    /**
+     * <code> Add a Listener to EventHandler for eventName to the end of the EventHandler's Listener array</code>
+     *
+     * @param eventName The name of the event you would like the listener to listen for.
+     *                  Notes: This string is not case sensitive.
+     *                  Example: "MESSAGE_CREATE"
+     * @param listener  The Listener you would like to add to the EventHandler
+     * @param <E>       The GatewayEvent of the Listener and EventHandler
+     * @return Returns the resulting EventHandler after having added listener.
+     * @throws IOException thrown upon invalid event name or the event was not included in the Client's intents
+     */
+
     public <E extends GatewayEvent> EventHandler<E> on(String eventName, EventHandler.Listener<E> listener) throws IOException {
         return this.addListener(eventName, -1, listener);
     }
 
+    /**
+     * <code> Add a Listener to EventHandler for eventName at index in the EventHandler's Listener array</code>
+     *
+     * @param eventName The name of the event you would like the listener to listen for.
+     *                  Notes: This string is not case sensitive.
+     *                  Example: "MESSAGE_CREATE"
+     * @param index     The index where to place listener in the EventHandler's array.
+     *                  Notes: A negative integer will add the Listener at end of array.
+     *                  Examples: -10, 6
+     * @param listener  The Listener you would like to add to the EventHandler
+     * @param <E>       The GatewayEvent of the Listener and EventHandler
+     * @return Returns the resulting EventHandler after having added listener.
+     * @throws IOException thrown upon invalid event name or the event was not included in the Client's intents
+     */
+
     public <E extends GatewayEvent> EventHandler<E> addListenerAt(String eventName, Integer index, EventHandler.Listener<E> listener) throws IOException {
         return this.addListener(eventName, index, listener);
     }
+
+    /**
+     * <code> Add a Listener to EventHandler for eventName to the beginning of the EventHandler's Listener array</code>
+     *
+     * @param eventName The name of the event you would like the listener to listen for.
+     *                  Notes: This string is not case sensitive.
+     *                  Example: "MESSAGE_CREATE"
+     * @param listener  The Listener you would like to add to the EventHandler
+     * @param <E>       The GatewayEvent of the Listener and EventHandler
+     * @return Returns the resulting EventHandler after having added listener.
+     * @throws IOException thrown upon invalid event name or the event was not included in the Client's intents
+     */
 
     public <E extends GatewayEvent> EventHandler<E> prependListener(String eventName, EventHandler.Listener<E> listener) throws IOException {
         return this.addListener(eventName, 0, listener);
@@ -213,6 +253,11 @@ public class Client {
         this.eventHandlers.put(name, eventHandler);
         return eventHandler;
     }
+
+    public Boolean tokenChecker(String token) {
+        return true;
+    }
+
 
     public HashMap<String, EventHandler<?>> getHandlers() {
         return this.eventHandlers;
