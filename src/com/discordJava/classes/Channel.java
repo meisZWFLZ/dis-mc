@@ -48,7 +48,7 @@ public class Channel {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.id + "/messages"))
-                .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
+                .headers("Authorization", "Bot " + this.client.token(), "Content-type", "application/json; charset=UTF-8")
                 .timeout(Duration.ofSeconds(10))
                 .POST(HttpRequest.BodyPublishers.ofString(form))
                 .build();

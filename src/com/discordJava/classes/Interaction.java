@@ -29,7 +29,7 @@ public class Interaction {
         return HttpClient.newHttpClient().send(
                 HttpRequest.newBuilder()
                         .uri(new URI("https://discord.com/api/v8/interactions/" + this.id + "/" + this.token + "/callback"))
-                        .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
+                        .headers("Authorization", "Bot " + this.client.token(), "Content-type", "application/json; charset=UTF-8")
                         .POST(HttpRequest.BodyPublishers.ofString(new Gson().toJson(res, res.getClass())))
                         .build(),
                 HttpResponse.BodyHandlers.ofString()

@@ -23,7 +23,7 @@ public interface SlashCommand {
     String getName();
 
     default ApplicationCommand getCmd(Client client) throws URISyntaxException, IOException, InterruptedException {
-        return new Gson().fromJson(HttpClient.newHttpClient().send(HttpRequest.newBuilder(new URI("https://discord.com/api/v8/applications/824688812247482448/" + (this.getGuild() == null ? "" : "guilds/" + this.getGuild()) + "commands/" + this.getId())).header("Authorization", "Bot " + client.token).GET().build(), HttpResponse.BodyHandlers.ofString()).body(), ApplicationCommand.class);
+        return new Gson().fromJson(HttpClient.newHttpClient().send(HttpRequest.newBuilder(new URI("https://discord.com/api/v8/applications/824688812247482448/" + (this.getGuild() == null ? "" : "guilds/" + this.getGuild()) + "commands/" + this.getId())).header("Authorization", "Bot " + client.token()).GET().build(), HttpResponse.BodyHandlers.ofString()).body(), ApplicationCommand.class);
     }
 
     class Input {

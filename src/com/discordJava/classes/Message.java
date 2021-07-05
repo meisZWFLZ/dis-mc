@@ -52,7 +52,7 @@ public class Message {
     public Message(Client client, Long channelId, Long messageId) throws IOException, InterruptedException, URISyntaxException {
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(new URI("https://discord.com/api/v" + client.version + "/channels/" + channelId + "/messages/" + messageId))
-                .headers("Authorization", "Bot " + client.token)
+                .headers("Authorization", "Bot " + client.token())
                 .timeout(Duration.ofSeconds(10))
                 .GET()
                 .build();
@@ -128,7 +128,7 @@ public class Message {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.channel_id + "/messages"))
-                    .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
+                    .headers("Authorization", "Bot " + this.client.token(), "Content-type", "application/json; charset=UTF-8")
                     .timeout(Duration.ofSeconds(10))
                     .POST(HttpRequest.BodyPublishers.ofString(form))
                     .build();
@@ -145,7 +145,7 @@ public class Message {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.channel_id + "/messages"))
-                .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
+                .headers("Authorization", "Bot " + this.client.token(), "Content-type", "application/json; charset=UTF-8")
                 .timeout(Duration.ofSeconds(10))
                 .POST(HttpRequest.BodyPublishers.ofString(form))
                 .build();
@@ -161,7 +161,7 @@ public class Message {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.channel_id + "/messages"))
-                .headers("Authorization", "Bot " + this.client.token, "Content-type", "application/json; charset=UTF-8")
+                .headers("Authorization", "Bot " + this.client.token(), "Content-type", "application/json; charset=UTF-8")
                 .timeout(Duration.ofSeconds(10))
                 .POST(HttpRequest.BodyPublishers.ofString(form))
                 .build();
@@ -172,7 +172,7 @@ public class Message {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(new URI("https://discord.com/api/v" + this.client.version + "/channels/" + this.channel_id))
-                .headers("Authorization", "Bot " + this.client.token)
+                .headers("Authorization", "Bot " + this.client.token())
                 .timeout(Duration.ofSeconds(10))
                 .GET()
                 .build();

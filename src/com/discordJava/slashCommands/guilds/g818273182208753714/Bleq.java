@@ -27,7 +27,7 @@ public class Bleq implements SlashCommand {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(new URI("https://discord.com/api/v8/interactions/" + input.interaction.id + "/" + input.interaction.token + "/callback"))
-                    .headers("Authorization", "Bot " + input.client.token, "Content-type", "application/json; charset=UTF-8")
+                    .headers("Authorization", "Bot " + input.client.token(), "Content-type", "application/json; charset=UTF-8")
                     .POST(HttpRequest.BodyPublishers.ofString(resStr))
                     .build();
             HttpResponse response = client.send(req, HttpResponse.BodyHandlers.ofString());
