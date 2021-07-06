@@ -13,10 +13,7 @@
           <root url="jar://$USER_HOME$/Downloads/gson-2.8.7.jar!/" />
         </CLASSES>
         <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/Downloads/gson-2.8.7.jar!/" />
-          <root url="jar://$USER_HOME$/.ideaLibSources/gson-2.8.7-sources.jar!/" />
-        </SOURCES>
+        <SOURCES />
       </library>
     </orderEntry>
   </component>
