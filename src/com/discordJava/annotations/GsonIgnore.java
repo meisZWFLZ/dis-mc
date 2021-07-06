@@ -3,7 +3,10 @@ package com.discordJava.annotations;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
-import java.util.Arrays;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * <code>
@@ -16,6 +19,8 @@ import java.util.Arrays;
  * @see com.discordJava.classes.Client#GSON
  */
 
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.FIELD})
 public @interface GsonIgnore {
     /**
      * <code>prevent annoying gson from reading what its not supposed to by annotating your class with {@link GsonIgnore} (dum gson)</code>
@@ -27,12 +32,12 @@ public @interface GsonIgnore {
     class Strategy implements ExclusionStrategy {
         @Override
         public boolean shouldSkipField(FieldAttributes f) {
-            return f.getAnnotations().contains(GsonIgnore.class);
+            return f.getAnnotation(GsonIgnore.class) != null || shouldSkipClass(f.getDeclaredClass());
         }
 
         @Override
         public boolean shouldSkipClass(Class<?> clazz) {
-            return Arrays.asList(clazz.getAnnotations()).contains(GsonIgnore.class);
+            return clazz.getAnnotation(GsonIgnore.class) != null/* || clazz.equals(Client.class)*/;
         }
     }
 }

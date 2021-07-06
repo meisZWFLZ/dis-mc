@@ -528,6 +528,7 @@ public class Client {
 
             /**
              * <code> Simple constructor</code>
+             *
              * @param data
              * @param client
              */
@@ -578,22 +579,22 @@ public class Client {
                     this.once = false;
                 }
 
-                public Builder tester(Function<Input<E>, Boolean> tester) {
+                public Builder<E> tester(Function<Input<E>, Boolean> tester) {
                     this.tester = tester;
                     return this;
                 }
 
-                public Builder executor(Function<Input<E>, Object> executor) {
+                public Builder<E> executor(Function<Input<E>, Object> executor) {
                     this.executor = executor;
                     return this;
                 }
 
-                public Builder name(String name) {
+                public Builder<E> name(String name) {
                     this.name = name;
                     return this;
                 }
 
-                public Builder once(Boolean once) {
+                public Builder<E> once(Boolean once) {
                     this.once = once;
                     return this;
                 }
