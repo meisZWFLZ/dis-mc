@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class Client {
     };
     private DiscordGateway gateway;
     public Byte version = 8;
-    public static final Gson GSON = new GsonBuilder().setExclusionStrategies(new GsonIgnore.Strategy()).create();
+    public static final Gson GSON = new GsonBuilder().setExclusionStrategies(new GsonIgnore.Strategy()).registerTypeAdapter(Snowflake.class, new Snowflake.SnowflakeAdapter()).create();
     public Client client;
 
     /**

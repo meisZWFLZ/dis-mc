@@ -1,5 +1,11 @@
 .idea
 
+/out/
+
+/out/artifacts/
+
+/out/production/
+
 *.iml
 
-/out/
+*.class

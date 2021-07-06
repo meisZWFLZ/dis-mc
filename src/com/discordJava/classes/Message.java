@@ -3,7 +3,6 @@ package com.discordJava.classes;
 import com.google.gson.Gson;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
@@ -11,11 +10,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Timestamp;
 import java.time.Duration;
-import java.util.HashMap;
+import java.util.Arrays;
 
 public class Message {
-    public String id;
-    public String channel_id;
+    public Snowflake id;
+    public Snowflake channel_id;
+    public Snowflake guild_id;
     public User author;
     public GuildMember member;
     public String content;
@@ -30,11 +30,11 @@ public class Message {
     public Embed[] embeds;
     public Reaction[] reactions;
     public Boolean pinned;
-    public String webhook_id;
+    public Snowflake webhook_id;
     public Integer type;
     public MessageActivity activity;
     public Application application;
-    public String application_id;
+    public Snowflake application_id;
     public MessageReference message_reference;
     public Integer flags;
     public Sticker[] stickers;
@@ -47,9 +47,7 @@ public class Message {
     public Message() {
     }
 
-    ;
-
-    public Message(Client client, Long channelId, Long messageId) throws IOException, InterruptedException, URISyntaxException {
+    public Message(Client client, Snowflake channelId, Snowflake messageId) throws IOException, InterruptedException, URISyntaxException {
         HttpRequest req = HttpRequest.newBuilder()
                 .uri(new URI("https://discord.com/api/v" + client.version + "/channels/" + channelId + "/messages/" + messageId))
                 .headers("Authorization", "Bot " + client.token())
@@ -59,6 +57,7 @@ public class Message {
         Message msg = new Gson().fromJson(HttpClient.newHttpClient().send(req, HttpResponse.BodyHandlers.ofString()).body(), Message.class);
         this.channel_id = msg.channel_id;
         this.id = msg.id;
+        this.guild_id = msg.guild_id;
         this.content = msg.content;
         this.activity = msg.activity;
         this.application = msg.application;
@@ -92,6 +91,7 @@ public class Message {
     private Message(Message.Builder msg) {
         this.channel_id = msg.channel_id;
         this.id = msg.id;
+        this.guild_id = msg.guild_id;
         this.content = msg.content;
         this.activity = msg.activity;
         this.application = msg.application;
@@ -133,14 +133,14 @@ public class Message {
                     .POST(HttpRequest.BodyPublishers.ofString(form))
                     .build();
             return Client.GSON.fromJson(client.send(req, HttpResponse.BodyHandlers.ofString()).body(), Message.class);
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Message failed to send, error: " + e);
             return null;
         }
     }
 
     public Message reply(Message message) throws URISyntaxException, IOException, InterruptedException {
-        String form = new Gson().toJson(this, Message.class);
+        String form = new Gson().toJson(message.builder().message_reference(MessageReference.newBuilder(this)).type(Type.REPLY).build(), Message.class);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
@@ -153,10 +153,7 @@ public class Message {
     }
 
     public Message reply(String msgContent) throws URISyntaxException, IOException, InterruptedException {
-        HashMap<String, Serializable> formMap = new HashMap<String, Serializable>();
-        formMap.put("message_reference", this.id);
-        formMap.put("content", msgContent);
-        String form = new Gson().toJson(formMap, HashMap.class);
+        String form = new Gson().toJson(Message.newBuilder(this.client).content(msgContent).message_reference(MessageReference.newBuilder(this)).type(Type.REPLY).build(), Message.class);
 
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest req = HttpRequest.newBuilder()
@@ -181,6 +178,10 @@ public class Message {
         return channel;
     }
 
+    public Type type() {
+        return Message.Type.values()[this.type];
+    }
+
     public static Message.Builder newBuilder(Client client) {
         return new Message.Builder(client);
     }
@@ -189,35 +190,78 @@ public class Message {
         return new Message.Builder(this);
     }
 
+    public enum Flag {
+        CROSSPOSTED, IS_CROSSPOST,
+        SUPPRESS_EMBEDS, SOURCE_MESSAGE_DELETED,
+        URGENT, HAS_THREAD,
+        EPHEMERAL, LOADING;
+
+        public int getInt(){
+            return 1 << Arrays.asList(Flag.values()).indexOf(this);
+        }
+
+        public static int getInt(Flag flag) {
+            return 1 << Arrays.asList(Flag.values()).indexOf(flag);
+        }
+
+        public static int getInt(String flag) {
+            return 1 << Arrays.asList(Flag.values()).indexOf(Flag.valueOf(flag));
+        }
+
+        public static Type getType(Integer flag) {
+            return Type.values()[flag/a];
+        }
+
+        @Override
+        public String toString() {
+            return this.name();
+        }
+    }
+
+    public enum Type {
+        DEFAULT, RECIPIENT_ADD,
+        RECIPIENT_REMOVE, CALL,
+        CHANNEL_NAME_CHANGE, CHANNEL_ICON_CHANGE,
+        CHANNEL_PINNED_MESSAGE, GUILD_MEMBER_JOIN,
+        USER_PREMIUM_GUILD_SUBSCRIPTION, USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_1,
+        USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_2, USER_PREMIUM_GUILD_SUBSCRIPTION_TIER_3,
+        CHANNEL_FOLLOW_ADD, GUILD_DISCOVERY_DISQUALIFIED,
+        GUILD_DISCOVERY_REQUALIFIED, GUILD_DISCOVERY_GRACE_PERIOD_INITIAL_WARNING,
+        GUILD_DISCOVERY_GRACE_PERIOD_FINAL_WARNING, THREAD_CREATED,
+        REPLY, APPLICATION_COMMAND,
+        THREAD_STARTER_MESSAGE, GUILD_INVITE_REMINDER;
+    }
+
     public static class Builder {
-        String id = null;
-        String channel_id = null;
-        User author = null;
-        GuildMember member = null;
-        String content = null;
-        Timestamp timestamp = null;
-        Timestamp edited_timestamp = null;
-        Boolean tts = null;
-        Boolean mention_everyone = null;
-        User[] mentions = null;
-        String[] mentions_roles = null;
-        ChannelMention[] mentions_channels = null;
-        Attachment[] attachments = null;
-        Embed[] embeds = null;
-        Reaction[] reactions = null;
-        Boolean pinned = null;
-        String webhook_id = null;
-        Integer type = null;
-        MessageActivity activity = null;
-        Application application = null;
-        String application_id = null;
-        MessageReference message_reference = null;
-        Integer flags = null;
-        Sticker[] stickers = null;
-        Message referenced_message = null;
-        MessageInteraction interaction = null;
-        Channel thread = null;
-        MessageComponent[] components = null;
+        Snowflake id;
+        Snowflake guild_id;
+        Snowflake channel_id;
+        User author;
+        GuildMember member;
+        String content;
+        Timestamp timestamp;
+        Timestamp edited_timestamp;
+        Boolean tts;
+        Boolean mention_everyone;
+        User[] mentions;
+        String[] mentions_roles;
+        ChannelMention[] mentions_channels;
+        Attachment[] attachments;
+        Embed[] embeds;
+        Reaction[] reactions;
+        Boolean pinned;
+        Snowflake webhook_id;
+        Integer type;
+        MessageActivity activity;
+        Application application;
+        Snowflake application_id;
+        MessageReference message_reference;
+        Integer flags;
+        Sticker[] stickers;
+        Message referenced_message;
+        MessageInteraction interaction;
+        Channel thread;
+        MessageComponent[] components;
         Client client;
 
         Builder(Client client) {
@@ -227,6 +271,7 @@ public class Message {
         Builder(Message msg) {
             this.channel_id = msg.channel_id;
             this.id = msg.id;
+            this.guild_id = msg.guild_id;
             this.content = msg.content;
             this.activity = msg.activity;
             this.application = msg.application;
@@ -272,11 +317,31 @@ public class Message {
         }
 
         public Builder channel_id(String channel_id) {
+            this.channel_id = new Snowflake(channel_id);
+            return this;
+        }
+
+        public Builder channel_id(Snowflake channel_id) {
             this.channel_id = channel_id;
             return this;
         }
 
+        public Builder guild_id(String guild_id) {
+            this.guild_id = new Snowflake(guild_id);
+            return this;
+        }
+
+        public Builder guild_id(Snowflake guild_id) {
+            this.guild_id = guild_id;
+            return this;
+        }
+
         public Builder id(String id) {
+            this.id = new Snowflake(id);
+            return this;
+        }
+
+        public Builder id(Snowflake id) {
             this.id = id;
             return this;
         }
@@ -337,6 +402,11 @@ public class Message {
         }
 
         public Builder application_id(String application_id) {
+            this.application_id = new Snowflake(application_id);
+            return this;
+        }
+
+        public Builder application_id(Snowflake application_id) {
             this.application_id = application_id;
             return this;
         }
@@ -391,7 +461,17 @@ public class Message {
             return this;
         }
 
+        public Builder type(Message.Type type) {
+            this.type = Arrays.asList(Message.Type.values()).indexOf(type);
+            return this;
+        }
+
         public Builder webhook_id(String webhook_id) {
+            this.webhook_id = new Snowflake(webhook_id);
+            return this;
+        }
+
+        public Builder webhook_id(Snowflake webhook_id) {
             this.webhook_id = webhook_id;
             return this;
         }

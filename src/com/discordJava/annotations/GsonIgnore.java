@@ -22,6 +22,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface GsonIgnore {
+
     /**
      * <code>prevent annoying gson from reading what its not supposed to by annotating your class with {@link GsonIgnore} (dum gson)</code>
      *
@@ -29,6 +30,7 @@ public @interface GsonIgnore {
      * @see ExclusionStrategy
      * @see com.discordJava.classes.Client#GSON
      */
+
     class Strategy implements ExclusionStrategy {
         @Override
         public boolean shouldSkipField(FieldAttributes f) {

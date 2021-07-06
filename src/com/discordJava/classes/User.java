@@ -10,7 +10,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class User {
-    public String id;
+    public Snowflake id;
     public String username;
     public String discriminator;
     public String avatar;
