@@ -196,6 +196,8 @@ public class Message {
         URGENT, HAS_THREAD,
         EPHEMERAL, LOADING;
 
+        private static final Integer[] INT_ARRAY = new Integer[]{1, 2, 4, 8, 16, 32, 64, 128, 256};
+
         public int getInt(){
             return 1 << Arrays.asList(Flag.values()).indexOf(this);
         }
@@ -208,9 +210,9 @@ public class Message {
             return 1 << Arrays.asList(Flag.values()).indexOf(Flag.valueOf(flag));
         }
 
-        public static Type getType(Integer flag) {
-            return Type.values()[flag/a];
-        }
+//        public static Flag[] getFlags(Integer flags) {
+//            return Arrays.stream(Flag.values()).filter(x -> );
+//        }
 
         @Override
         public String toString() {
@@ -232,37 +234,7 @@ public class Message {
         THREAD_STARTER_MESSAGE, GUILD_INVITE_REMINDER;
     }
 
-    public static class Builder {
-        Snowflake id;
-        Snowflake guild_id;
-        Snowflake channel_id;
-        User author;
-        GuildMember member;
-        String content;
-        Timestamp timestamp;
-        Timestamp edited_timestamp;
-        Boolean tts;
-        Boolean mention_everyone;
-        User[] mentions;
-        String[] mentions_roles;
-        ChannelMention[] mentions_channels;
-        Attachment[] attachments;
-        Embed[] embeds;
-        Reaction[] reactions;
-        Boolean pinned;
-        Snowflake webhook_id;
-        Integer type;
-        MessageActivity activity;
-        Application application;
-        Snowflake application_id;
-        MessageReference message_reference;
-        Integer flags;
-        Sticker[] stickers;
-        Message referenced_message;
-        MessageInteraction interaction;
-        Channel thread;
-        MessageComponent[] components;
-        Client client;
+    public static class Builder extends Message {
 
         Builder(Client client) {
             this.client = client;
